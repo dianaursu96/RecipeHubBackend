@@ -41,9 +41,9 @@ public class ChefController {
 
     @Transactional
     @PostMapping("/recipes/create")
-    public ResponseEntity<String> createRecipe(@Valid @RequestBody RecipeCreateRequest recipeRequest) {
-        recipeService.createRecipe(recipeRequest);
-        return ResponseEntity.ok("Recipe created successfully");
+    public ResponseEntity<Recipe> createRecipe(@Valid @RequestBody RecipeCreateRequest recipeRequest) {
+        Recipe createdRecipe = recipeService.createRecipe(recipeRequest);
+        return ResponseEntity.ok(createdRecipe);
     }
 
     @Transactional

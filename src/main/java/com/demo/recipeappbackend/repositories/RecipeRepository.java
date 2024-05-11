@@ -5,11 +5,16 @@ import com.demo.recipeappbackend.models.Recipe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+
+@Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
     List<Recipe> findByTitle(String title);
+    //Optional<Recipe> findById(int id);
 
     @Query("SELECT r FROM Recipe r WHERE r.chef.id = :chefId")
     List<Recipe> findByChefId(@Param("chefId") int chefId);

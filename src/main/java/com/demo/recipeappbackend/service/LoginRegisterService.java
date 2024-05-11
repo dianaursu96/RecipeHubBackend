@@ -67,7 +67,7 @@ public class LoginRegisterService {
         User user = userDetails.getUser();
 
         // Extract favorite recipe IDs
-        List<Integer> favouriteRecipeIds = user.getFavouriteRecipes().stream()
+        List<Integer> favourites = user.getFavouriteRecipes().stream()
                 .map(UsersToFavourites::getRecipe)
                 .map(Recipe::getId)
                 .collect(Collectors.toList());
@@ -79,7 +79,7 @@ public class LoginRegisterService {
                 user.getId(),
                 userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().orElse(""),
                 "Login successful",
-                favouriteRecipeIds  // Include favorite recipe IDs
+                favourites
         );
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(responseDTO);

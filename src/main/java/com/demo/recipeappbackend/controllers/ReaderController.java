@@ -2,6 +2,7 @@ package com.demo.recipeappbackend.controllers;
 
 import com.demo.recipeappbackend.models.Recipe;
 import com.demo.recipeappbackend.models.Category;
+import com.demo.recipeappbackend.models.UsersToFavourites;
 import com.demo.recipeappbackend.service.RecipeService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,12 @@ public class ReaderController {
     public ResponseEntity<List<Recipe>> getAllRecipes() {
         List<Recipe> recipes = recipeService.getAllRecipes();
         return ResponseEntity.ok(recipes);
+    }
+    @Transactional
+    @GetMapping("/recipes/{id}")
+    public ResponseEntity<Recipe> getRecipeById(@PathVariable Integer id) {
+        Recipe recipe = recipeService.getRecipeById(id);
+        return ResponseEntity.ok(recipe);
     }
     @Transactional
     @GetMapping("/recipes/favourites")
@@ -60,16 +67,16 @@ public class ReaderController {
 
     @Transactional
     @PostMapping("/favourites/add")
-    public ResponseEntity<String> addToFavourites(@RequestParam("recipeId") Integer recipeId) {
-        recipeService.addToFavourites(recipeId);
-        return ResponseEntity.ok("Recipe added to favourites successfully");
+    public ResponseEntity<List<Integer>> addToFavourites(@RequestParam("recipeId") Integer recipeId) {
+        List<Integer> favouriteList = recipeService.addToFavourites(recipeId);
+        return ResponseEntity.ok(favouriteList);
     }
 
     @Transactional
     @DeleteMapping("/favourites/delete")
-    public ResponseEntity<String> deleteFromFavourites(@RequestParam("recipeId") Integer recipeId) {
-        recipeService.deleteFromFavourites(recipeId);
-        return ResponseEntity.ok("Recipe deleted from favourites successfully");
+    public ResponseEntity<List<Integer>> deleteFromFavourites(@RequestParam("recipeId") Integer recipeId) {
+        List<Integer> favouriteList  = recipeService.deleteFromFavourites(recipeId);
+        return ResponseEntity.ok(favouriteList);
     }
 }
 

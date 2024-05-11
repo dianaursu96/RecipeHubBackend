@@ -42,8 +42,21 @@ public class RecipeService {
         return userDetails.getUser();
     }
     public List<Recipe> getAllRecipes() {
-        return recipeRepository.findAll();
+        return recipeRepository.findPublishedRecipes();
     }
+    public Recipe getRecipeById (Integer recipeId) {
+        Optional<Recipe> existingRecipeOptional = recipeRepository.findById(recipeId);
+        Recipe existingRecipe;
+
+        if (existingRecipeOptional.isPresent()) {
+            existingRecipe = existingRecipeOptional.get();
+        } else {
+            throw new ResourceNotFoundException("Recipe not found");
+        }
+        return existingRecipe;
+    }
+
+
     public List<Recipe> searchRecipes(String searchString) {
         return recipeRepository.findByTitleContaining(searchString);
     }
@@ -61,41 +74,56 @@ public class RecipeService {
                 .collect(Collectors.toList());  // Return as a list
     }
     @Transactional
-    public void addToFavourites(Integer recipeId) {
+    public List<Integer> addToFavourites(Integer recipeId) {
         User user = getLoggedInUser();
+        Optional<Recipe> existingRecipeOptional = recipeRepository.findById(recipeId);
+        Recipe existingRecipe;
 
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
+        if (existingRecipeOptional.isPresent()) {
+            existingRecipe = existingRecipeOptional.get();
+        } else {
             throw new ResourceNotFoundException("Recipe not found");
         }
-        Recipe recipe = recipeOptional.get();
 
-        if ( usersToFavouritesRepository.existsByUserAndRecipe(user, recipe)) {
+        if ( usersToFavouritesRepository.existsByUserAndRecipe(user, existingRecipe)) {
             throw new RecipeAlreadyFavouredException("Recipe already added to favourites");
         }
 
         UsersToFavourites favourite = new UsersToFavourites();
         favourite.setUser(user);
-        favourite.setRecipe(recipe);
+        favourite.setRecipe(existingRecipe);
         usersToFavouritesRepository.save(favourite);
+        List<UsersToFavourites> favouriteEntries = usersToFavouritesRepository.findByUser(user);
+        return favouriteEntries.stream()
+                .map(UsersToFavourites::getRecipe)
+                .map(Recipe::getId)
+                .collect(Collectors.toList());
     }
     @Transactional
-    public void deleteFromFavourites (Integer recipeId) {
+    public List<Integer> deleteFromFavourites (Integer recipeId) {
         User user = getLoggedInUser();
 
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
+        Optional<Recipe> existingRecipeOptional = recipeRepository.findById(recipeId);
+        Recipe existingRecipe;
+
+        if (existingRecipeOptional.isPresent()) {
+            existingRecipe = existingRecipeOptional.get();
+        } else {
             throw new ResourceNotFoundException("Recipe not found");
         }
-        Recipe recipe = recipeOptional.get();
-
-        Optional<UsersToFavourites> favouriteOptional = usersToFavouritesRepository.findByUserAndRecipe(user, recipe);
-        if (favouriteOptional.isEmpty()) {
+        Optional<UsersToFavourites> favouriteOptional = usersToFavouritesRepository.findByUserAndRecipe(user, existingRecipe);
+        UsersToFavourites favourite;
+        if (favouriteOptional.isPresent()) {
+            favourite = favouriteOptional.get();
+        } else {
             throw new ResourceNotFoundException("Recipe is not in your favourites");
         }
-
-        UsersToFavourites favourite = favouriteOptional.get();
         usersToFavouritesRepository.delete(favourite);
+        List<UsersToFavourites> favouriteEntries = usersToFavouritesRepository.findByUser(user);
+        return favouriteEntries.stream()
+                .map(UsersToFavourites::getRecipe)
+                .map(Recipe::getId)
+                .collect(Collectors.toList());
     }
 
     public List<Recipe> getAllRecipesForLoggedInChef() {
@@ -121,7 +149,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public void createRecipe(RecipeCreateRequest recipeRequest) {
+    public Recipe createRecipe(RecipeCreateRequest recipeRequest) {
         User chef = getLoggedInUser();
         Recipe newRecipe = new Recipe();
         newRecipe.setTitle(recipeRequest.getTitle());
@@ -140,6 +168,7 @@ public class RecipeService {
         newRecipe.setUpdatedAt(LocalDateTime.now());
         newRecipe.setChef(chef);
         recipeRepository.save(newRecipe);
+        return newRecipe;
     }
 
     @Transactional
@@ -247,6 +276,6 @@ public class RecipeService {
         if (!Objects.equals(existingRecipe.getChef().getId(), loggedInChef.getId())) {
             throw new UnauthorizedAccessException("You are not authorized to delete this recipe");
         }
-        recipeRepository.deleteById(recipeId);
+        recipeRepository.deleteById((recipeId));
     }
 }

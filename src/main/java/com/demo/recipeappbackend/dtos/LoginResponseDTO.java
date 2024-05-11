@@ -14,15 +14,15 @@ public class LoginResponseDTO {
     private String role;
     private String token;
     private String message;
-    private List<Integer> favouriteRecipeIds;
+    private List<Integer> favourites;
 
-    public LoginResponseDTO(String firstName, String email, String token, Long id, String role, String message, List<Integer> favouriteRecipeIds) {
+    public LoginResponseDTO(String firstName, String email, String token, Long id, String role, String message, List<Integer> favourites) {
         this.firstName = firstName;
         this.email = email;
         this.token = token;
         this.id = id;
         this.role = role;
         this.message = message;
-        this.favouriteRecipeIds = favouriteRecipeIds;
+        this.favourites = favourites;
     }
 }

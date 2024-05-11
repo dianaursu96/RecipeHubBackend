@@ -76,6 +76,7 @@ public class Recipe {
 
     @JsonIgnore
     @OneToMany(mappedBy = "recipe")
+    @ToString.Exclude
     private List<UsersToFavourites> usersWhoFavorited;
 
 
