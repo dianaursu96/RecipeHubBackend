@@ -1,6 +1,7 @@
 package com.demo.recipeappbackend.models;
 
 
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +12,8 @@ public enum Category {
     BREAKFAST("breakfast"),
     DESSERT("dessert"),
     DRINKS("drinks"),
-    SNACK("snack");
+    SNACK("snack"),
+    ALL("");
 
     private final String name;
 }

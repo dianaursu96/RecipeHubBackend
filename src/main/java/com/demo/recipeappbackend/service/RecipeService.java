@@ -13,12 +13,15 @@ import com.demo.recipeappbackend.repositories.RecipeRepository;
 import com.demo.recipeappbackend.repositories.UsersToFavouritesRepository;
 import com.demo.recipeappbackend.security.UserDetailsImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -57,13 +60,23 @@ public class RecipeService {
     }
 
 
-    public List<Recipe> searchRecipes(String searchString) {
-        return recipeRepository.findByTitleContaining(searchString);
+    public List<Recipe> searchRecipesByTitleContainingAndCategory(String searchString, String categoryName) {
+        if (StringUtils.isEmpty(categoryName)) {
+            return recipeRepository.findByTitleContaining(searchString);
+        } else {
+            Category category;
+            try {
+                category = Category.valueOf(categoryName.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                return Collections.emptyList();
+            }
+            return recipeRepository.findByTitleContainingAndCategory(searchString, category);
+        }
     }
 
-    public List<Recipe> getRecipesByCategory(Category category) {
-        return recipeRepository.findByCategory(category);
-    }
+//    public List<Recipe> getRecipesByCategory(Category category) {
+//        return recipeRepository.findByCategory(category);
+//    }
     public List<Recipe> getFavouriteRecipes() {
         User user = getLoggedInUser();
         List<UsersToFavourites> favourites = usersToFavouritesRepository.findByUser(user);

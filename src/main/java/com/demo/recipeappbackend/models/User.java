@@ -46,6 +46,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
+    @JsonIgnore
     private List<UsersToFavourites> favouriteRecipes;
 
     @OneToMany(mappedBy = "chef")

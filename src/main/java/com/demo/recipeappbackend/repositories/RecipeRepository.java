@@ -21,9 +21,14 @@ public interface RecipeRepository extends JpaRepository<Recipe, Integer> {
 
     @Query("SELECT r FROM Recipe r WHERE r.isPublished = true")
     List<Recipe> findPublishedRecipes();  // Finds published recipes
+
+//    @Query("SELECT r FROM Recipe r WHERE LOWER(r.title) LIKE LOWER(CONCAT('%', :searchString, '%')) AND (:category IS NULL OR r.category = :category)")
+//    List<Recipe> findByTitleContainingAndCategory(@Param("searchString") String searchString, Category category);
     @Query("SELECT r FROM Recipe r WHERE LOWER(r.title) LIKE LOWER(CONCAT('%', :searchString, '%'))")
     List<Recipe> findByTitleContaining(@Param("searchString") String searchString);
 
+    @Query("SELECT r FROM Recipe r WHERE LOWER(r.title) LIKE LOWER(CONCAT('%', :searchString, '%')) AND (:category IS NULL OR r.category = :category)")
+    List<Recipe> findByTitleContainingAndCategory(@Param("searchString") String searchString, Category category);
     List<Recipe> findByCategory(Category category);
 
 

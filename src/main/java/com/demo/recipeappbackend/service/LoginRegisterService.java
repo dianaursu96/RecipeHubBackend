@@ -105,6 +105,7 @@ public class LoginRegisterService {
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully!");
     }
+
     @Transactional
     public ResponseEntity<?> changeEmail(String newEmail) {
         if (!isValidEmail(newEmail)) {
@@ -139,6 +140,7 @@ public class LoginRegisterService {
 
         return ResponseEntity.ok("Password updated successfully.");
     }
+
 
     private boolean isValidEmail(String email) {
         // Basic email validation logic
