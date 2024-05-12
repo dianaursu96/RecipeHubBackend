@@ -70,7 +70,7 @@ public class Recipe {
 
     @ManyToOne
     @JoinColumn(name = "chef_id",referencedColumnName = "id")
-    @JsonBackReference
+//    @JsonBackReference
     private User chef;
 
 
@@ -78,7 +78,6 @@ public class Recipe {
     @OneToMany(mappedBy = "recipe")
     @ToString.Exclude
     private List<UsersToFavourites> usersWhoFavorited;
-
 
 
     public boolean getIsPublished() {

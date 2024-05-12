@@ -10,14 +10,16 @@ import java.util.List;
 public class LoginResponseDTO {
     private Long id;
     private String firstName;
+    private String lastName;
     private String email;
     private String role;
     private String token;
     private String message;
     private List<Integer> favourites;
 
-    public LoginResponseDTO(String firstName, String email, String token, Long id, String role, String message, List<Integer> favourites) {
+    public LoginResponseDTO(String firstName, String lastName, String email, String token, Long id, String role, String message, List<Integer> favourites) {
         this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.token = token;
         this.id = id;

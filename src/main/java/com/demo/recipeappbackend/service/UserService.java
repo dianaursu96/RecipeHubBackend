@@ -1,6 +1,7 @@
 package com.demo.recipeappbackend.service;
 
 
+import com.demo.recipeappbackend.dtos.ProfileUpdateRequestDTO;
 import com.demo.recipeappbackend.dtos.UserRolesUpdateDTO;
 import com.demo.recipeappbackend.errors.ResourceNotFoundException;
 import com.demo.recipeappbackend.errors.UnauthorizedAccessException;
@@ -11,6 +12,7 @@ import com.demo.recipeappbackend.repositories.UsersToFavouritesRepository;
 import com.demo.recipeappbackend.security.Role;
 import com.demo.recipeappbackend.security.UserDetailsImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +46,25 @@ public class UserService {
     }
 
     public List<User> getAllUsersExceptLoggedInAdmin() {
-        User user = getLoggedInUser();
-        int userId = Integer.parseInt(String.valueOf(user.getId()));
+        User loggedInUser = getLoggedInUser();
+        int userId = Integer.parseInt(String.valueOf(loggedInUser.getId()));
         return userRepository.findAllExceptAdmin(userId);
+    }
+
+    @Transactional
+    public User updateLoggedInUser(ProfileUpdateRequestDTO profileUpdateRequestDTO) {
+        User loggedInUser = getLoggedInUser();
+        if (profileUpdateRequestDTO.getFirstName() != null) {
+            loggedInUser.setFirstName(profileUpdateRequestDTO.getFirstName());
+        }
+        if (profileUpdateRequestDTO.getLastName() != null) {
+            loggedInUser.setLastName(profileUpdateRequestDTO.getLastName());
+        }
+        if (profileUpdateRequestDTO.getEmail() != null) {
+            loggedInUser.setEmail(profileUpdateRequestDTO.getEmail());
+        }
+        userRepository.save(loggedInUser);
+        return loggedInUser;
     }
 
     @Transactional

@@ -74,6 +74,7 @@ public class LoginRegisterService {
 
         LoginResponseDTO responseDTO = new LoginResponseDTO(
                 user.getFirstName(),
+                user.getLastName(),
                 user.getEmail(),
                 jwtCookie.getValue(),
                 user.getId(),
