@@ -3,6 +3,8 @@ package com.demo.recipeappbackend.service;
 
 import com.demo.recipeappbackend.dtos.ProfileUpdateRequestDTO;
 import com.demo.recipeappbackend.dtos.UserRolesUpdateDTO;
+import com.demo.recipeappbackend.errors.EmailUsedException;
+import com.demo.recipeappbackend.errors.InvalidEmailException;
 import com.demo.recipeappbackend.errors.ResourceNotFoundException;
 import com.demo.recipeappbackend.errors.UnauthorizedAccessException;
 import com.demo.recipeappbackend.models.Recipe;
@@ -53,6 +55,7 @@ public class UserService {
 
     @Transactional
     public User updateLoggedInUser(ProfileUpdateRequestDTO profileUpdateRequestDTO) {
+
         User loggedInUser = getLoggedInUser();
         if (profileUpdateRequestDTO.getFirstName() != null) {
             loggedInUser.setFirstName(profileUpdateRequestDTO.getFirstName());
@@ -61,6 +64,9 @@ public class UserService {
             loggedInUser.setLastName(profileUpdateRequestDTO.getLastName());
         }
         if (profileUpdateRequestDTO.getEmail() != null) {
+            if (!isValidEmail(profileUpdateRequestDTO.getEmail())) {
+                throw new InvalidEmailException("Invalid email format.");
+            }
             loggedInUser.setEmail(profileUpdateRequestDTO.getEmail());
         }
         userRepository.save(loggedInUser);
@@ -80,6 +86,9 @@ public class UserService {
         return updatedUsers;
     }
 
+    private boolean isValidEmail(String email) {
+        return email != null && email.contains("@") && email.contains(".");
+    }
 
 
 }

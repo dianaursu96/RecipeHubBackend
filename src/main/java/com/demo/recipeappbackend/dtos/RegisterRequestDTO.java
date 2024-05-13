@@ -20,7 +20,6 @@ public class RegisterRequestDTO {
         this.role = "READER"; // Default value for role
     }
 
-    // Constructor with parameters
     public RegisterRequestDTO(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

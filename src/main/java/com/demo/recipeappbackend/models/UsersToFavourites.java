@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users_to_favourites") // id user_id, recipe_id
+@Table(name = "users_to_favourites")
 public class UsersToFavourites {
     @Id
     @Column(name = "id")
@@ -20,7 +20,7 @@ public class UsersToFavourites {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne  // Many recipes to one user (part of many-to-many)
+    @ManyToOne
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;
 

@@ -30,5 +30,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRecipeAlreadyFavouredException(RecipeAlreadyFavouredException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
     }
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<String> handleInvalidEmailException(InvalidEmailException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

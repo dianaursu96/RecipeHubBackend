@@ -61,12 +61,8 @@ public class LoginRegisterService {
 
         ResponseCookie jwtCookie = jwtHelper.generateJwtCookie(userDetails);
 
-//        String role = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().getFirst();
-//        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-//                .body(new LoginResponseDTO(userDetails.getUser().getFirstName(), userDetails.getEmail(), jwtCookie.getValue(), userDetails.getId(), role, "Login successful"));
         User user = userDetails.getUser();
 
-        // Extract favorite recipe IDs
         List<Integer> favourites = user.getFavouriteRecipes().stream()
                 .map(UsersToFavourites::getRecipe)
                 .map(Recipe::getId)
@@ -144,7 +140,6 @@ public class LoginRegisterService {
 
 
     private boolean isValidEmail(String email) {
-        // Basic email validation logic
         return email != null && email.contains("@") && email.contains(".");
     }
 

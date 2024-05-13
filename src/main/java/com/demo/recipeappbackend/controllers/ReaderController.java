@@ -51,19 +51,6 @@ public class ReaderController {
         return ResponseEntity.ok(recipes);
     }
 
-//    @Transactional
-//    @GetMapping("/category")
-//    public ResponseEntity<List<Recipe>> searchByCategory(@RequestParam("category") String categoryName) {
-//        Category category;
-//        try {
-//            category = Category.valueOf(categoryName.toUpperCase());
-//        } catch (IllegalArgumentException ex) {
-//            return ResponseEntity.badRequest().body(null);
-//        }
-//
-//        List<Recipe> recipes = recipeService.getRecipesByCategory(category);
-//        return ResponseEntity.ok(recipes);
-//    }
 
     @Transactional
     @PostMapping("/favourites/add")

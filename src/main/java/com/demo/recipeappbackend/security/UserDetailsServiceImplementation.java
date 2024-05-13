@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserDetailsServiceImplementation implements UserDetailsService {
 
-    @Autowired  // check
+    @Autowired
     UserRepository userRepository;
 
     @Override
@@ -24,4 +24,6 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with email: " + email));
         return UserDetailsImplementation.build(user);
     }
+
+
 }

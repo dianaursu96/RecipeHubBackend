@@ -41,7 +41,6 @@ public class JWTService {
 
     public String generateTokenForUser(User user) {
         return Jwts.builder()
-                //.setPayload(user.getEmail())
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))

@@ -70,7 +70,6 @@ public class Recipe {
 
     @ManyToOne
     @JoinColumn(name = "chef_id",referencedColumnName = "id")
-//    @JsonBackReference
     private User chef;
 
 

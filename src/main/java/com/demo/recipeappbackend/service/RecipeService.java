@@ -13,7 +13,6 @@ import com.demo.recipeappbackend.repositories.RecipeRepository;
 import com.demo.recipeappbackend.repositories.UsersToFavouritesRepository;
 import com.demo.recipeappbackend.security.UserDetailsImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -74,17 +73,13 @@ public class RecipeService {
         }
     }
 
-//    public List<Recipe> getRecipesByCategory(Category category) {
-//        return recipeRepository.findByCategory(category);
-//    }
     public List<Recipe> getFavouriteRecipes() {
         User user = getLoggedInUser();
         List<UsersToFavourites> favourites = usersToFavouritesRepository.findByUser(user);
 
-        // Extract the recipes from the UsersToFavourites list
         return favourites.stream()
-                .map(UsersToFavourites::getRecipe)  // Get the recipe from each favourite entry
-                .collect(Collectors.toList());  // Return as a list
+                .map(UsersToFavourites::getRecipe)
+                .collect(Collectors.toList());
     }
     @Transactional
     public List<Integer> addToFavourites(Integer recipeId) {
