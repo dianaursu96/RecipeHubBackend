@@ -10,8 +10,8 @@ public class CorsConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // Allow all endpoints
-                .allowedOrigins("https://recipe-hub-183082fbf56b.herokuapp.com/")  // Allow this origin
-                .allowedMethods("GET", "POST", "PUT", "DELETE")  // Allow these HTTP methods
+                .allowedOrigins("https://recipe-hub-183082fbf56b.herokuapp.com/", "http://localhost:8080")  //
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("Authorization", "Content-Type")  // Allow these headers
                 .allowCredentials(true);  // Allow cookies and credentials
     }
