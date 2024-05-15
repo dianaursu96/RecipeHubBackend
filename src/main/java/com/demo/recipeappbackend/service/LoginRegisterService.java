@@ -2,9 +2,7 @@ package com.demo.recipeappbackend.service;
 import com.demo.recipeappbackend.dtos.LoginRequestDTO;
 import com.demo.recipeappbackend.dtos.LoginResponseDTO;
 import com.demo.recipeappbackend.dtos.RegisterRequestDTO;
-import com.demo.recipeappbackend.errors.EmailUsedException;
-import com.demo.recipeappbackend.errors.InvalidRoleException;
-import com.demo.recipeappbackend.errors.ResourceNotFoundException;
+import com.demo.recipeappbackend.errors.*;
 import com.demo.recipeappbackend.repositories.UserRepository;
 import com.demo.recipeappbackend.security.Role;
 import com.demo.recipeappbackend.security.UserDetailsImplementation;
@@ -88,10 +86,10 @@ public class LoginRegisterService {
             throw new EmailUsedException("Email is already in use.");
         }
         if (!isValidEmail(registerRequestDTO.getEmail())) {
-            return ResponseEntity.badRequest().body("Invalid email format.");
+            throw new InvalidEmailException("Invalid email format.");
         }
         if (!isValidPassword(registerRequestDTO.getPassword())) {
-            return ResponseEntity.badRequest().body("Password does not meet the required strength.");
+            throw new InvalidPasswordException("Password needs to be minimum 8 characters long and contain at least one uppercase letter and one digit");
         }
         String role = registerRequestDTO.getRole();
         if (!(role.equals("READER") || role.equals("ADMIN")|| role.equals("CHEF"))) {
@@ -106,11 +104,11 @@ public class LoginRegisterService {
     @Transactional
     public ResponseEntity<?> changeEmail(String newEmail) {
         if (!isValidEmail(newEmail)) {
-            return ResponseEntity.badRequest().body("Invalid email format.");
+            throw new InvalidEmailException("Invalid email format.");
         }
 
         if (userRepository.existsByEmail(newEmail)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use.");
+            throw new EmailUsedException("Email is already in use.");
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -125,7 +123,7 @@ public class LoginRegisterService {
     @Transactional
     public ResponseEntity<?> changePassword(String newPassword) {
         if (!isValidPassword(newPassword)) {
-            return ResponseEntity.badRequest().body("Password does not meet the strength requirements.");
+            throw new InvalidPasswordException("Password needs to be minimum 8 characters long and contain at least one uppercase letter and one digit");
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

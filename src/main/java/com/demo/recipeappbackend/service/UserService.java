@@ -64,6 +64,9 @@ public class UserService {
             loggedInUser.setLastName(profileUpdateRequestDTO.getLastName());
         }
         if (profileUpdateRequestDTO.getEmail() != null) {
+            if (userRepository.existsByEmail(profileUpdateRequestDTO.getEmail())) {
+                throw new EmailUsedException("Email is already in use.");
+            }
             if (!isValidEmail(profileUpdateRequestDTO.getEmail())) {
                 throw new InvalidEmailException("Invalid email format.");
             }
